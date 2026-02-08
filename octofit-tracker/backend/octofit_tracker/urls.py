@@ -16,7 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from .views import UserViewSet, TeamViewSet, WorkoutViewSet, ActivityViewSet, LeaderboardViewSet, api_root
+from .views import UserViewSet, TeamViewSet, WorkoutViewSet, ActivityViewSet, LeaderboardViewSet
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+import os
+
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -24,6 +28,22 @@ router.register(r'teams', TeamViewSet)
 router.register(r'workouts', WorkoutViewSet)
 router.register(r'activities', ActivityViewSet)
 router.register(r'leaderboard', LeaderboardViewSet)
+
+CODESPACE_NAME = os.environ.get('CODESPACE_NAME')
+if CODESPACE_NAME:
+    base_url = f"https://{CODESPACE_NAME}-8000.app.github.dev/api/"
+else:
+    base_url = "/api/"
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'users': f'{base_url}users/',
+        'teams': f'{base_url}teams/',
+        'workouts': f'{base_url}workouts/',
+        'activities': f'{base_url}activities/',
+        'leaderboard': f'{base_url}leaderboard/',
+    })
 
 urlpatterns = [
     path('admin/', admin.site.urls),
