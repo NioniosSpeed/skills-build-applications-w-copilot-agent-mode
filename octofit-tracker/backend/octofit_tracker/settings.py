@@ -94,11 +94,18 @@ DATABASES = {
     }
 }
 
+
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
 CORS_ALLOW_METHODS = ['DELETE', 'GET', 'OPTIONS', 'PATCH', 'POST', 'PUT']
+
+# Explicitly allow the frontend codespace URL for CORS
+frontend_url = None
+if CODESPACE_NAME:
+    frontend_url = f"https://{CODESPACE_NAME}-3000.app.github.dev"
+CORS_ALLOWED_ORIGINS = [frontend_url] if frontend_url else []
 
 
 # Password validation
